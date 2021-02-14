@@ -20,14 +20,24 @@
 #include "setdefaultpopover.h"
 #include "ui_setdefaultpopover.h"
 
+#include <QMimeType>
+#include <QMimeDatabase>
+
 SetDefaultPopover::SetDefaultPopover(QString mimeType, ApplicationPointer app, QWidget* parent) :
     QWidget(parent),
     ui(new Ui::SetDefaultPopover) {
     ui->setupUi(this);
 
     ui->titleLabel->setBackButtonShown(true);
-    ui->descriptionLabel->setText(tr("When opening files of type %1, do you always want to use %2?").arg(QLocale().quoteString(mimeType), QLocale().quoteString(app->getProperty("Name").toString())));
     ui->setDefaultButton->setText(tr("Always use %1").arg(QLocale().quoteString(app->getProperty("Name").toString())));
+
+    if (mimeType.startsWith("x-scheme-handler/")) {
+        ui->descriptionLabel->setText(tr("When opening %1 links, do you always want to use %2?").arg(QLocale().quoteString(mimeType.mid(mimeType.indexOf("/") + 1)), QLocale().quoteString(app->getProperty("Name").toString())));
+    } else {
+        QMimeDatabase db;
+        QMimeType mt = db.mimeTypeForName(mimeType);
+        ui->descriptionLabel->setText(tr("When opening files of type %1, do you always want to use %2?").arg(QLocale().quoteString(mt.comment()), QLocale().quoteString(app->getProperty("Name").toString())));
+    }
 }
 
 SetDefaultPopover::~SetDefaultPopover() {

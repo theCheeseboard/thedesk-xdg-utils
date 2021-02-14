@@ -107,7 +107,6 @@ FileAssociationSelect::FileAssociationSelect(QUrl file, QString mimeType, QList<
         }
     }
 
-    QList<ApplicationPointer> allApps;
     for (const QString& application : Application::allApplications()) {
         ApplicationPointer app(new Application(application));
 
@@ -116,14 +115,7 @@ FileAssociationSelect::FileAssociationSelect(QUrl file, QString mimeType, QList<
         if (app->getProperty("NoDisplay", false).toBool()) continue;
         if (!app->getStringList("OnlyShowIn", {"thedesk"}).contains("thedesk")) continue;
         if (app->getStringList("NotShowIn").contains("thedesk")) continue;
-        allApps.append(app);
-    }
 
-    std::sort(allApps.begin(), allApps.end(), [ = ](const ApplicationPointer & first, const ApplicationPointer & second) {
-        return first->getProperty("Name").toString().localeAwareCompare(second->getProperty("Name").toString()) < 0;
-    });
-
-    for (ApplicationPointer app : allApps) {
         QListWidgetItem* item = new QListWidgetItem();
         item->setText(app->getProperty("Name").toString());
         item->setIcon(QIcon::fromTheme(app->getProperty("Icon").toString()));

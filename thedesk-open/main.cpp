@@ -27,23 +27,11 @@
 #include <QMimeDatabase>
 #include <QScreen>
 #include <Applications/application.h>
+#include <MimeAssociations/mimeassociationmanager.h>
 #include "fileassociationselect.h"
 
-QList<ApplicationPointer> appropriateApplications(QString mimeType) {
-    if (mimeType == "application/octet-stream") return {};
-    QList<ApplicationPointer> apps;
-    for (const QString& application : Application::allApplications()) {
-        ApplicationPointer app(new Application(application));
-        QStringList acceptableMimeTypes = app->getStringList("MimeType");
-        if (acceptableMimeTypes.contains(mimeType)) apps.append(app);
-    }
-    return apps;
-}
-
-void openUrl(QUrl url) {
+void openUrl(QUrl url, bool forcePrompt) {
     QMimeDatabase db;
-    QSettings defaults("/etc/thesuite/theDesk/associations.conf", QSettings::IniFormat);
-    QSettings settings;
 
     QMap<QString, QString> launchArgs;
     launchArgs.insert("%u", url.toString());
@@ -60,38 +48,19 @@ void openUrl(QUrl url) {
         mimeType = "x-scheme-handler/" + url.scheme();
     }
 
-    defaults.beginGroup("mimetypes");
-    settings.beginGroup("mimetypes");
-
-    QString assoc;
-    if (defaults.contains(mimeType)) assoc = defaults.value(mimeType).toString();
-    if (settings.contains(mimeType)) assoc = settings.value(mimeType).toString();
-
-    if (!assoc.isEmpty() && assoc != "[unset]") {
-        //Ensure the application still exists
-        if (Application::allApplications().contains(assoc)) {
-            qDebug() << "File association already set for this file";
-            //Launch the application!
-            Application(assoc).launch(launchArgs);
+    if (!forcePrompt) {
+        ApplicationPointer defaultApp = MimeAssociationManager::defaultApplicationForMimeType(mimeType);
+        if (defaultApp) {
+            defaultApp->launch(launchArgs);
             return;
-        } else {
-            //Clear the file association
-            settings.setValue(mimeType, "[unset]");
         }
     }
 
     qDebug() << "MIME type: " << mimeType;
-//    qDebug() << "MIME description: " << mimeType.comment();
-    qDebug() << "Can be opened with:";
-    QList<ApplicationPointer> apps = appropriateApplications(mimeType);
-    for (ApplicationPointer app : apps) {
-        qDebug() << "  " << app->desktopEntry();
-    }
+    QList<ApplicationPointer> apps = MimeAssociationManager::applicationsForMimeType(mimeType);
 
     if (apps.count() == 1) {
-        qDebug() << "Setting" << apps.first()->desktopEntry() << "to open this file";
-        settings.setValue(mimeType, apps.first()->desktopEntry());
-
+        MimeAssociationManager::setDefaultApplicationForMimeType(apps.first()->desktopEntry(), mimeType);
         apps.first()->launch(launchArgs);
     } else {
         FileAssociationSelect dialog(url, mimeType, apps);
@@ -104,7 +73,7 @@ void openUrl(QUrl url) {
 
         if (dialog.exec() == FileAssociationSelect::Rejected) return;
 
-        if (dialog.shouldSetDefault()) settings.setValue(mimeType, dialog.selectedApplication()->desktopEntry());
+        if (dialog.shouldSetDefault()) MimeAssociationManager::setDefaultApplicationForMimeType(dialog.selectedApplication()->desktopEntry(), mimeType);
 
         dialog.selectedApplication()->launch(launchArgs);
     }
@@ -122,23 +91,22 @@ int main(int argc, char* argv[]) {
 
     QCommandLineParser parser;
     parser.addPositionalArgument(a.translate("main", "url"), a.translate("main", "The URL or path of a file to open"));
+    parser.addOption({"force-prompt", a.translate("main", "Show the app selection dialog, even if there is an app set as the default")});
     parser.addHelpOption();
     parser.process(a);
-
-
 
     //Ensure all the command line options are valid
     QTextStream out(stdout);
     QTextStream err(stderr);
     if (parser.positionalArguments().count() == 0) {
-        err << "thedesk-open: " + QApplication::translate("main", "missing operand") + "\n";
-        err << QApplication::translate("main", "Usage: %1 [options] url").arg(a.arguments().first()) + "\n";
-        err << "       " + QApplication::translate("main", "%1 -h for more information.").arg(a.arguments().first()) + "\n";
+        err << "thedesk-open: " + a.translate("main", "missing operand") + "\n";
+        err << a.translate("main", "Usage: %1 [options] url").arg(a.arguments().first()) + "\n";
+        err << "       " + a.translate("main", "%1 -h for more information.").arg(a.arguments().first()) + "\n";
         return 1;
     } else if (parser.positionalArguments().count() > 1) {
-        err << "thedesk-open: " + QApplication::translate("main", "too many operands") + "\n";
-        err << QApplication::translate("main", "Usage: %1 [options] url").arg(a.arguments().first()) + "\n";
-        err << "       " + QApplication::translate("main", "%1 -h for more information.").arg(a.arguments().first()) + "\n";
+        err << "thedesk-open: " + a.translate("main", "too many operands") + "\n";
+        err << a.translate("main", "Usage: %1 [options] url").arg(a.arguments().first()) + "\n";
+        err << "       " + a.translate("main", "%1 -h for more information.").arg(a.arguments().first()) + "\n";
         return 1;
     }
 
@@ -147,10 +115,10 @@ int main(int argc, char* argv[]) {
     QString canonical = QFileInfo(arg).canonicalFilePath();
     if (QFileInfo::exists(canonical)) {
         //Open arg as a file
-        openUrl(QUrl::fromLocalFile(canonical));
+        openUrl(QUrl::fromLocalFile(canonical), parser.isSet("force-prompt"));
     } else {
         QUrl url = QUrl::fromUserInput(arg);
-        openUrl(url);
+        openUrl(url, parser.isSet("force-prompt"));
     }
 
     return 0;

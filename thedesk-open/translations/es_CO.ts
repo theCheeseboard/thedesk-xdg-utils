@@ -102,12 +102,17 @@ You can use %2 again, grab a new app to open this file, or you can try opening i
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../setdefaultpopover.cpp" line="29"/>
+        <location filename="../setdefaultpopover.cpp" line="35"/>
+        <source>When opening %1 links, do you always want to use %2?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../setdefaultpopover.cpp" line="39"/>
         <source>When opening files of type %1, do you always want to use %2?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../setdefaultpopover.cpp" line="30"/>
+        <location filename="../setdefaultpopover.cpp" line="32"/>
         <source>Always use %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -115,34 +120,39 @@ You can use %2 again, grab a new app to open this file, or you can try opening i
 <context>
     <name>main</name>
     <message>
-        <location filename="../main.cpp" line="124"/>
+        <location filename="../main.cpp" line="93"/>
         <source>url</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="124"/>
+        <location filename="../main.cpp" line="93"/>
         <source>The URL or path of a file to open</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="134"/>
+        <location filename="../main.cpp" line="94"/>
+        <source>Show the app selection dialog, even if there is an app set as the default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../main.cpp" line="102"/>
         <source>missing operand</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="135"/>
-        <location filename="../main.cpp" line="140"/>
+        <location filename="../main.cpp" line="103"/>
+        <location filename="../main.cpp" line="108"/>
         <source>Usage: %1 [options] url</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="136"/>
-        <location filename="../main.cpp" line="141"/>
+        <location filename="../main.cpp" line="104"/>
+        <location filename="../main.cpp" line="109"/>
         <source>%1 -h for more information.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="139"/>
+        <location filename="../main.cpp" line="107"/>
         <source>too many operands</source>
         <translation type="unfinished"></translation>
     </message>

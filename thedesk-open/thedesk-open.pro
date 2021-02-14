@@ -33,7 +33,10 @@ unix:!macx {
 
     target.path = /usr/bin
 
-    symlinks.extra = mkdir -p $(INSTALL_ROOT)/usr/lib/thedesk/xdg-utils; ln -s $(INSTALL_ROOT)/usr/bin/thedesk-open $(INSTALL_ROOT)/usr/lib/thedesk/xdg-utils
+    defaults.files = associations.conf
+    defaults.path = /etc/thesuite/theDesk
+
+    symlinks.extra = mkdir -p $(INSTALL_ROOT)/usr/lib/thedesk/xdg-utils; ln -s $(INSTALL_ROOT)/usr/bin/thedesk-open $(INSTALL_ROOT)/usr/lib/thedesk/xdg-utils/xdg-open
     symlinks.path = /
 
     INSTALLS += target symlinks
