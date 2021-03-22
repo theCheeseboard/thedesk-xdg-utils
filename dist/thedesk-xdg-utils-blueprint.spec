@@ -6,8 +6,8 @@ Summary:        Helper for theDesk default applications
 License:        GPLv3+
 URL:            https://github.com/vicr123/thedesk-xdg-utils
 Source0:        https://github.com/vicr123/thedesk-xdg-utils/archive/%{version}.tar.gz
-Conflicts:      thedesk
-Provides:       thedesk
+Conflicts:      thedesk-xdg-utils
+Provides:       thedesk-xdg-utils
 
 %if 0%{?fedora} >= 33
 BuildRequires:  make qt5-qtbase-devel the-libs-blueprint-devel libtdesktopenvironment-blueprint-devel qt5-linguist 
