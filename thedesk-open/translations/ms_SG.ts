@@ -120,39 +120,39 @@ You can use %2 again, grab a new app to open this file, or you can try opening i
 <context>
     <name>main</name>
     <message>
-        <location filename="../main.cpp" line="93"/>
+        <location filename="../main.cpp" line="92"/>
         <source>url</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="93"/>
+        <location filename="../main.cpp" line="92"/>
         <source>The URL or path of a file to open</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="94"/>
+        <location filename="../main.cpp" line="93"/>
         <source>Show the app selection dialog, even if there is an app set as the default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="102"/>
+        <location filename="../main.cpp" line="101"/>
         <source>missing operand</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../main.cpp" line="102"/>
+        <location filename="../main.cpp" line="107"/>
+        <source>Usage: %1 [options] url</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../main.cpp" line="103"/>
         <location filename="../main.cpp" line="108"/>
-        <source>Usage: %1 [options] url</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../main.cpp" line="104"/>
-        <location filename="../main.cpp" line="109"/>
         <source>%1 -h for more information.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="107"/>
+        <location filename="../main.cpp" line="106"/>
         <source>too many operands</source>
         <translation type="unfinished"></translation>
     </message>
