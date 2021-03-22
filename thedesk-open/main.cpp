@@ -59,7 +59,7 @@ void openUrl(QUrl url, bool forcePrompt) {
     qDebug() << "MIME type: " << mimeType;
     QList<ApplicationPointer> apps = MimeAssociationManager::applicationsForMimeType(mimeType);
 
-    if (apps.count() == 1) {
+    if (apps.count() == 1 && !forcePrompt) {
         MimeAssociationManager::setDefaultApplicationForMimeType(apps.first()->desktopEntry(), mimeType);
         apps.first()->launch(launchArgs);
     } else {
